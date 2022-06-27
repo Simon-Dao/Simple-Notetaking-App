@@ -1,0 +1,108 @@
+get http://localhost:5000/notebook/get-notebook
+content-type: application/json
+
+{
+    "notebookName": "Jeff"
+}
+###
+
+get http://localhost:5000/page/get-page
+content-type: application/json
+
+{
+    "notebookName": "Jeff",
+    "pageName": "page1"
+}
+###
+
+get http://localhost:5000/notebook/get-notebooks
+
+###
+
+post http://localhost:5000/notebook/add-notebook
+content-type: application/json
+
+{
+    "notebookName": "Jeff2"
+}
+
+###
+
+post http://localhost:5000/notebook/rename-notebook
+content-type: application/json
+
+{
+    "notebookName": "Jeff2",
+    "newNotebookName": "Jeff the sequel"
+}
+###
+
+post http://localhost:5000/notebook/remove-notebook
+content-type: application/json
+
+{
+    "notebookName": "Jeff the sequel"
+}
+###
+
+get http://localhost:5000/page/get-page
+content-type: application/json
+
+{
+    "notebookName": "Jeff",
+    "pageName": "page1"
+}
+###
+
+get http://localhost:5000/page/get-pages
+content-type: application/json
+
+{
+    "notebookName": "Jeff"
+}
+###
+
+get http://localhost:5000/page/get-pages
+content-type: application/json
+
+{
+    "notebookName": "Jeff",
+    "prefix": "b"
+}
+###
+post http://localhost:5000/page/add-page
+content-type: application/json
+
+{
+    "notebookName": "Jeff",
+    "pageName": "page3"
+}
+###
+
+post http://localhost:5000/page/rename-page
+content-type: application/json
+
+{
+    "notebookName": "Jeff",
+    "pageName": "page1",
+    "newPageName":"page1.0"
+}
+###
+
+POST http://localhost:5000/page/edit-page
+content-type: application/json
+
+{
+    "notebookName": "Jeff",
+    "pageName": "page2",
+    "content": "this is the new content simon was here"
+}
+###
+ 
+POST http://localhost:5000/page/remove-page
+content-type: application/json
+
+{
+    "notebookName": "Jeff",
+    "pageName": "page2"
+}
