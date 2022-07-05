@@ -1,0 +1,55 @@
+import styled from 'styled-components'
+import TitleBar from './TitleBar'
+import '../style/index.css'
+import { useRecoilState } from 'recoil'
+import SelectedWindow from '../state/SelectedWindowState'
+import SelectedNotebook from '../state/SelectedNotebook'
+import titleState from '../state/CurrentTitle'
+import Notebooks from './Notebooks'
+import Pages from './Pages'
+import { useEffect, useState } from 'react'
+
+const Window = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+`
+
+const Container = styled.div`
+  flex-grow: 1;
+  padding: 20px;
+`
+
+export default function App() {
+
+  const [selectedWindow, setSelectedWindow] = useRecoilState(SelectedWindow)
+  const [selectedNotebook, setSelectedNotebook] = useRecoilState(SelectedNotebook)
+  const [title, setTitle] = useRecoilState(titleState)
+  
+  let MainContent = null
+
+  switch (selectedWindow) {
+    case 'notebooks':
+      MainContent = ((<Notebooks/>))
+      setTitle('Notebooks')
+      break;
+
+    case 'pages':
+      MainContent = ((<Pages />))
+      setTitle(selectedNotebook)
+      break;
+  }
+
+  return (
+    <Window>
+
+      <TitleBar />
+
+      <Container>
+        {MainContent}
+      </Container>
+      
+    </Window>
+  )
+}

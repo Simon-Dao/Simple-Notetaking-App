@@ -4,7 +4,7 @@ const model = require('../models/model')
 const getDate = require('../utils/date')
 
 //test route
-router.get('/', async (req, res) => {
+router.post('/', async (req, res) => {
     try {
         const data = 'page route'
         res.json(data)
@@ -13,7 +13,8 @@ router.get('/', async (req, res) => {
     }
 })
 
-router.get('/get-page', async (req,res) => {
+//THIS IS A GET ROUTE
+router.post('/get-page', async (req,res) => {
     try {
         const notebooks = await model.find({name:req.body.notebookName})
         
@@ -27,7 +28,8 @@ router.get('/get-page', async (req,res) => {
     }
 })
 
-router.get('/get-pages', async (req, res) => {
+//THIS IS A GET ROUTE
+router.post('/get-pages', async (req, res) => {
     try {
         const notebooks = await model.find({name:req.body.notebookName})
         const pages = notebooks[0].pages
@@ -37,7 +39,8 @@ router.get('/get-pages', async (req, res) => {
     }
 })
 
-router.get('/get-pages', async (req, res) => {
+//THIS IS A GET ROUTE
+router.post('/get-pages', async (req, res) => {
     try {
         const notebooks = await model.find( { name: { $regex: req.body.notebookName, $options : 'i'} } )
         const pages = notebooks[0].pages.filter((page) => page.name.toLowerCase().startsWith(req.body.prefix.toLowerCase())) 

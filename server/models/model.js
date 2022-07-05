@@ -27,6 +27,10 @@ const schema = new mongoose.Schema({
         required: true,
         unique: true
     },    
+    color: {
+        type: String,
+        required: true
+    },
     publishDate: {
         type: String,
         require: true
@@ -35,6 +39,9 @@ const schema = new mongoose.Schema({
         type: String,
         require: true
     },
-    pages:[pageSchema]
+    pages: {
+        type: Array,
+        require: false
+    }
 }) 
 module.exports = mongoose.model('notebook', schema)

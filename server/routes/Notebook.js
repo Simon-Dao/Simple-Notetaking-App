@@ -4,7 +4,7 @@ const model = require('../models/model')
 const getDate = require('../utils/date')
 
 //test route
-router.get('/', async (req, res) => {
+router.post('/', async (req, res) => {
     try {
         const data = 'notebook route'
         res.json(data)
@@ -13,8 +13,12 @@ router.get('/', async (req, res) => {
     }
 })
 
-router.get('/get-notebook', async (req,res) => {
+//THIS IS A GET ROUTE
+router.post('/get-notebook', async (req,res) => {
     try {
+
+        console.log(req.body)
+        console.log(req.params)
         const notebooks = await model.find({name:req.body.notebookName})
         res.json(notebooks[0])
     } catch(err) {
@@ -22,7 +26,8 @@ router.get('/get-notebook', async (req,res) => {
     }
 })
 
-router.get('/get-notebooks', async (req, res) => {
+//THIS IS A GET ROUTE
+router.post('/get-notebooks', async (req, res) => {
     try {
         const notebooks = await model.find({})
         res.json(notebooks)
@@ -31,7 +36,8 @@ router.get('/get-notebooks', async (req, res) => {
     }
 })
 
-router.get('/get-notebooks', async (req, res) => {
+//THIS IS A GET ROUTE
+router.post('/get-notebooks', async (req, res) => {
     try {
         const notebooks = await model.find( { name: { $regex: req.body.prefix, $options : 'i'} } )
         res.json(notebooks)
@@ -45,13 +51,17 @@ router.post('/add-notebook', async (req,res) => {
     try {
         const exists = await (await model.find({name: req.body.notebookName})).length > 0;
 
-        if(exists) return res.status(500).send(`notebook ${req.body.name} already exists`)
+        if(exists) return res.status(500).send(`notebook ${req.body.notebookName} already exists`)
+
+
+        console.log(req.body)
 
         model.create({
             name: req.body.notebookName,
+            color: req.body.color,
             publishDate: getDate(),
             lastEdited: getDate(),
-            page: []
+            pages: []
         })
 
     } catch(err) {
