@@ -7,6 +7,8 @@ const cors = require('cors')
 
 const PORT = 5000;
 
+//Please use env variables
+//also please stop using a local database
 mongoose.connect(`mongodb://localhost:27017/Notebook`, {useNewUrlParser: true})
 
 const db = mongoose.connection

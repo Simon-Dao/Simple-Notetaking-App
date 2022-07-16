@@ -116,15 +116,20 @@ router.post('/edit-page', async (req,res) => {
 
         if(!exists || !req.body.content) return res.status(500).send(`page ${req.body.pageName} doesn't exist`)
 
+        const currentDate = getDate()
+
         const newPage = pages[0]
         newPage.content = req.body.content 
-        
+        newPage.lastEdited = currentDate
+
         notebooks[0].pages.forEach((page, index) => {
             if(page.name === req.body.pageName) {
                 notebooks[0].pages[index] = newPage
             }
         })
         
+        notebooks[0].lastEdited = currentDate
+
         await model.findOneAndUpdate({name:req.body.notebookName}, notebooks[0])
 
     } catch(err) {

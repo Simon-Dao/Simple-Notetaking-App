@@ -26,7 +26,7 @@ export default function App() {
   const [selectedWindow, setSelectedWindow] = useRecoilState(SelectedWindow)
   const [selectedNotebook, setSelectedNotebook] = useRecoilState(SelectedNotebook)
   const [title, setTitle] = useRecoilState(titleState)
-  
+
   let MainContent = null
 
   switch (selectedWindow) {
@@ -49,7 +49,15 @@ export default function App() {
       <Container>
         {MainContent}
       </Container>
-      
+
     </Window>
   )
 }
+
+//todo
+//delete notebooks
+//delete pages
+//rename notebooks
+//rename pages
+//display last edited 
+//display the publish date

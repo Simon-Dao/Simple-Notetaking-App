@@ -3,7 +3,6 @@ import axios from 'axios'
 import styled from 'styled-components'
 import getDate from '../utils/Date'
 import { useRecoilState } from 'recoil'
-import selectedState1 from '../state/SelectedState'
 import SelectedWindow from '../state/SelectedWindowState'
 import SelectedNotebook from '../state/SelectedNotebook'
 import SelectedPage from '../state/SelectedPageState'
@@ -164,7 +163,6 @@ export default function Pages() {
   const [pages, setPages] = useState([])
   const [emptyMessage, setEmptyMessage] = useState('Add a notebook!')
   const [selectedWindow, setSelectedWindow] = useRecoilState(SelectedWindow)
-  const [currentProgramState, setProgramState] = useRecoilState(selectedState1)
   const [selectedNotebook, setSelectedNotebook] = useRecoilState(SelectedNotebook)
   const [selectedPage, setSelectedPage] = useRecoilState(SelectedPage)
   const [showModal, setModalVisibility] = useState(false)
@@ -175,13 +173,19 @@ export default function Pages() {
       try {
         let result = await axios.post('http://localhost:5000/page/get-pages', { notebookName: selectedNotebook })
         setPages(result.data)
-      }
+
+        const p = result.data.length > 0 ? result.data[0].name : 'none'
+
+        setSelectedPage(p)
+        selectPage(p)
+      } 
       catch (err) {
         console.log(err)
         setEmptyMessage('Network Error! Could not load notebooks')
       }
     }
     fetchData()
+
   }, [])
 
   const toggleModal = () => {

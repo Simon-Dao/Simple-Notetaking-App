@@ -5,5 +5,5 @@ import { atom } from "recoil";
 export default atom({
 
     key: 'selectedNotebookState',
-    default: 'simon\'s notebook'
+    default: ''
 })

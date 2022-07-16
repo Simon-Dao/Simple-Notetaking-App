@@ -5,5 +5,5 @@ import { atom } from "recoil";
 export default atom({
 
     key: 'selectedWindowState',
-    default: 'pages'
+    default: 'notebooks'
 })

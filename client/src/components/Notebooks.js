@@ -4,9 +4,9 @@ import styled from 'styled-components'
 import { ReactComponent as Icon } from '../svg/notebook-svg.svg'
 import getDate from '../utils/Date'
 import {useRecoilState} from 'recoil'
-import selectedState1 from '../state/SelectedState'
 import SelectedWindow from '../state/SelectedWindowState'
 import SelectedNotebook from '../state/SelectedNotebook'
+import NotebookComponent from './Notebook'
 
 const Container = styled.div`
     display: flex;
@@ -32,29 +32,6 @@ const NotebookContainer = styled.div`
     flex-wrap: wrap;
     flex-grow: 1;
     margin: 30px;
-`
-
-const Notebook = styled.div`
-    box-sizing: border-box;
-    display: flex;
-    border-radius: 30px;
-    font-size: 20px;
-    height: 200px;
-    width: 200px;
-    padding: 20px 20px 0px 20px;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    cursor: pointer;
-`
-
-const NotebookIcon = styled(Icon)`
-    width: 100px;
-    height: 100px;
-`
-
-const Subtext = styled.h1`
-    font-size: 20px;
 `
 
 const Empty = styled.div`
@@ -143,8 +120,6 @@ export default function Notebooks() {
     const [selectedWindow, setSelectedWindow] = useRecoilState(SelectedWindow)
     const [selectedNotebook, setSelectedNotebook] = useRecoilState(SelectedNotebook)
 
-    const [currentProgramState, setProgramState] = useRecoilState(selectedState1) 
-
     const [color, setColor] = useState(notebookColors[Math.floor(Math.random() * notebookColors.length)])
     const [name, setName] = useState('')
 
@@ -157,17 +132,28 @@ export default function Notebooks() {
                 setNotebooks(result.data)
             }
             catch(err) {
-                console.log(err)
                 setEmptyMessage('Network Error! Could not load notebooks')
             }
 
         }
         fetchData()
     }, [])
-
+    
     const toggleModal = () => {
         setModalVisibility(!showModal)
         setColor(notebookColors[Math.floor(Math.random() * notebookColors.length)])
+    }
+
+    const renameNotebook = (name, newName) => {
+        
+        for (let i = 0; i < notebooks.length; i++) {
+            if (notebooks[i].name === name) {
+                notebooks[i].name = newName
+                break
+            }
+        }        
+
+        setNotebooks(notebooks)
     }
 
     const addNotebook = () => {
@@ -211,18 +197,18 @@ export default function Notebooks() {
             content: ''
         }
 
-        const newState = {  
-            selectedWebpage:  'pages',
-            selectedNotebook: notebook.name,
-            selectedPage:     notebook.pages.length > 0 ? notebook.pages[0] : newPage
-        }
-
         setSelectedWindow('pages')
         setSelectedNotebook(notebook.name)
+    }
 
-        setProgramState(newState)
+    const removeNotebook = (target) => {
 
-        console.log(currentProgramState)
+        axios.post('http://localhost:5000/notebook/remove-notebook', 
+            {
+                notebookName: target.name
+            }
+        )
+        setNotebooks(notebooks.filter((notebook) => notebook.name !== target.name))
     }
 
     const content = Array.isArray(notebooks) && notebooks.length > 0 ?
@@ -230,10 +216,7 @@ export default function Notebooks() {
             notebooks?.map((notebook, index) => {
 
                 return (
-                    <Notebook onClick={() => openNotebook(notebook)} key={notebook.name}>
-                        <NotebookIcon fill={notebook.color} />
-                        <Subtext>{notebook.name}</Subtext>
-                    </Notebook>
+                    <NotebookComponent key={notebook.name} notebook={notebook} setNotebooks={setNotebooks} notebooks={notebooks} openNotebook={openNotebook} removeNotebook={()=>removeNotebook(notebook)}></NotebookComponent>
                 )
             })
         )

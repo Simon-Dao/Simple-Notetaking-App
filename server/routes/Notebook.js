@@ -73,10 +73,10 @@ router.post('/add-notebook', async (req,res) => {
 router.post('/rename-notebook', async (req,res) => {
 
     try {
-
+        
         const notebooks = await model.find({name:req.body.notebookName}) 
         const exists = notebooks.length > 0;
-
+        
         if(!exists) return res.status(500).send(`notebook ${req.body.notebookName} doesn't exist`)
 
         const newNotebook = notebooks[0]
@@ -86,6 +86,7 @@ router.post('/rename-notebook', async (req,res) => {
 
     } catch(err) {
         res.status(500).json({message: err.message})
+        console.log(err)
     }
 })
 
@@ -93,6 +94,7 @@ router.post('/remove-notebook', async (req,res) => {
 
     try {
 
+        console.log(req.body)
         const notebooks = await model.find({name:req.body.notebookName}) 
         const exists = notebooks.length > 0;
 
