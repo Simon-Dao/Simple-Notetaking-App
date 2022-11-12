@@ -4,12 +4,14 @@ const mongoose = require('mongoose')
 const NotebookRoute = require('./routes/Notebook')
 const PageRoute = require('./routes/Page')
 const cors = require('cors')
+require("dotenv").config();
 
 const PORT = 5000;
 
 //Please use env variables
 //also please stop using a local database
-mongoose.connect(`mongodb://localhost:27017/Notebook`, {useNewUrlParser: true})
+console.log(process.env.MONGO_DB_URL)
+mongoose.connect(process.env.MONGO_DB_URL, {useNewUrlParser: true})
 
 const db = mongoose.connection
 db.on('error', (error) => console.log(error))
@@ -19,12 +21,6 @@ const namesList = []
 db.once('open', () => {
 
   db.db.listCollections().toArray((err, names) => {
-    /*for (let i = 0; i < names.length; i++) {
-      // gets only the name and adds it to a list
-      const nameOnly = names[i].name;
-      namesList.push(nameOnly);
-    }
-    console.log(namesList); */
   })
 
 })

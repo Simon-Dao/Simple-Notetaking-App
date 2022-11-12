@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const model = require('../models/model')
 const getDate = require('../utils/date')
+const axios = require('axios')
 
 //test route
 router.post('/', async (req, res) => {
@@ -57,14 +58,14 @@ router.post('/add-page', async (req,res) => {
 
         const notebooks = await model.find({name:req.body.notebookName}) 
         const exists = notebooks[0].pages.filter(page => page.name === req.body.pageName).length > 0;
-
+        
         if(exists) return res.status(500).send(`page ${req.body.pageName} already exists`)
 
         const newPage = {
             name: req.body.pageName,
             publishDate: getDate(),
             lastEdited: getDate(),
-            content: ''
+            content: req.body.content || ''
         }
 
         notebooks[0].pages.push(newPage) 
@@ -114,7 +115,19 @@ router.post('/edit-page', async (req,res) => {
         const pages = notebooks[0].pages.filter(page => page.name === req.body.pageName)
         const exists = pages.length > 0;
 
-        if(!exists || !req.body.content) return res.status(500).send(`page ${req.body.pageName} doesn't exist`)
+        if(!req.body.content) return res.status(500).send(`page ${req.body.pageName} doesn't exist`)
+
+        if(!exists) {
+
+            //create a new page!
+            axios.post('http://localhost:5000/page/add-page',{
+                notebookName: selectedNotebook,
+                pageName: selectedPage,
+                content: content
+            })
+            
+            return
+        }
 
         const currentDate = getDate()
 
