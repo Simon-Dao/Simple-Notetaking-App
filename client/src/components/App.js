@@ -16,9 +16,10 @@ const Window = styled.div`
   height: 100vh;
 `
 
-const Container = styled.div`
+const MainContentContainer = styled.div`
   flex-grow: 1;
-  padding: 20px;
+  display: flex;
+  box-sizing: border-box;
 `
 
 export default function App() {
@@ -43,17 +44,14 @@ export default function App() {
 
   return (
     <Window>
-
       <TitleBar />
-
-      <Container>
+      <MainContentContainer>
         {MainContent}
-      </Container>
-
+      </MainContentContainer>
     </Window>
   )
 }
-
+//{MainContent}
 //todo
 //delete notebooks
 //delete pages

@@ -6,18 +6,22 @@ import { useRecoilState } from 'recoil'
 import SelectedWindow from '../state/SelectedWindowState'
 import SelectedNotebook from '../state/SelectedNotebook'
 import SelectedPage from '../state/SelectedPageState'
+import {Button} from 'react-bootstrap'
+import NavBar from './Page/NavBar'
+import PagesComponent from './Page/PagesComponent'
+import TextArea from './Page/TextArea'
 
 const Container = styled.div`
   display: flex;
+  max-height: 100%;
   height: 100%;
   width: 100%;
-`
+  `
 
-const NavBarContainer = styled.div`
-  border: 1px solid rgba(0, 0, 0, 0.3);
-  display: flex;
-  width: 340px;
+const PageContainer = styled.div`
+  background-color: blue;
   height: 100%;
+  flex-grow: 1;
 `
 
 const SearchColumnContainer = styled.div`
@@ -25,17 +29,6 @@ const SearchColumnContainer = styled.div`
   width: 90px;
   display: flex;
   flex-direction: column;
-`
-
-const BackButton = styled.div`
-  width: 100%;
-  height: 50px;
-  background-color: orange;
-  margin-bottom: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
 `
 
 const SearchBarButton = styled.div`
@@ -48,24 +41,6 @@ const SearchBarButton = styled.div`
   cursor: pointer;
 `
 
-const PagesContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  padding-left: 20px;
-  padding-right: 20px;
-  flex-grow: 1;
-  border: 1px solid rgba(0, 0, 0, 0.3);
-`
-const PageContainer = styled.div`
-  box-sizing: border-box;
-  flex-grow: 1;
-  height: 100%;
-  font-size: 40px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-`
 
 const PageName = styled.div`
   height: 60px;
@@ -88,44 +63,9 @@ const AddPageButton = styled.button`
   cursor: pointer;
 `
 
-const ModalContainer = styled.div`
-    box-sizing: border-box;
-    position: absolute;
-    left: 260px;
-    bottom: 60px;
-    width: 200px;
-    height: 150px;
-    border-radius: 10px;
-    background-color: orange;
-    display: ${props => props.show ? 'flex' : 'none'};
-    flex-direction: column;
-    align-items: center;
-`
-
-const ModalTextField = styled.input`
-    height: 20px;
-    border-radius: 10px;
-`
-
-const ModalLabel = styled.h1`
-    font-size: 20px;
-    height: 20px;
-`
-
 const ButtonContainer = styled.div`
     display: flex;
     justify-content: center;
-`
-
-const ModalButton = styled.button`
-    background-color: green;
-    border-radius: 10px;
-    border: none;
-    width: 80px;
-    height: 30px;
-    margin: 5px;
-    margin-top: 30px;
-    cursor: pointer;
 `
 
 const Page = styled.div`
@@ -137,12 +77,6 @@ const Page = styled.div`
   border: 1px solid rgba(0, 0, 0, 0.3);
   background-color: ${props => props.color};
   cursor: pointer;
-`
-
-const TextArea = styled.textarea`
-  width: 100%;
-  flex-grow: 1;
-  font-size: 40px;
 `
 
 const SaveButton = styled.button`
@@ -222,7 +156,7 @@ export default function Pages() {
   }
 
   const saveContent = () => {
-
+    console.log('saving content')
     axios.post('http://localhost:5000/page/edit-page',{
       notebookName: selectedNotebook,
       pageName: selectedPage,
@@ -231,6 +165,7 @@ export default function Pages() {
   }
 
   const selectPage = async (name) => {
+
     setSelectedPage(name)
 
     const result = await axios.post('http://localhost:5000/page/get-page', {
@@ -247,42 +182,10 @@ export default function Pages() {
 
   return (
     <Container>
-      <NavBarContainer>
-        <SearchColumnContainer>
-          <BackButton onClick={backToNotebooks}>Notebooks</BackButton>
-          <SearchBarButton>Search</SearchBarButton>
-        </SearchColumnContainer>
-        <PagesContainer>
-          <PageName>{selectedPage}</PageName>
-
-          {
-            pages.map((page) => {
-
-              return (
-                <Page color={page.name === selectedPage ? 'gray' : 'white'} onClick={() => selectPage(page.name)} key={page.name}>{page.name}</Page>
-              )
-            })
-          }
-
-          <AddPageButton onClick={toggleModal}>Add a page</AddPageButton>
-        </PagesContainer>
-      </NavBarContainer>
-      <PageContainer>
-        <TextArea onChange={(e)=> setContent(e.target.value)} value={content}>
-          
-        </TextArea>
-        <SaveButton onClick={saveContent}>Save</SaveButton>
-      </PageContainer>
-
-      <ModalContainer show={showModal}>
-        <ModalLabel>Page Name</ModalLabel>
-        <ModalTextField maxLength={20} value={name} onInput={(e) => { setName(e.target.value) }}></ModalTextField>
-        <ButtonContainer>
-          <ModalButton onClick={toggleModal}>cancel</ModalButton>
-          <ModalButton onClick={addPage}>submit</ModalButton>
-        </ButtonContainer>
-      </ModalContainer>
-
+      <NavBar backToNotebooks={backToNotebooks}>
+      </NavBar>
+      <PagesComponent pages={pages} selectPage={selectPage} selectedPage={selectedPage} ></PagesComponent>
+      <TextArea pages={pages} selectedPage={selectedPage} saveContent={saveContent}></TextArea>
     </Container>
   )
 }
