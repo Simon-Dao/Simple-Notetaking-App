@@ -32,7 +32,7 @@ export default function Pages() {
         let result = await axios.post('http://localhost:5000/page/get-pages', { notebookName: selectedNotebook })
         setPages(result.data)
 
-        const p = result.data.length > 0 ? result.data[0].name : 'none'
+        const p = result.data.length > 0 ? result.data[0].name : 'Add a page'
 
         setSelectedPage(p)
         selectPage(p)

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { ReactComponent as Icon } from '../svg/notebook-svg.svg'
-import { ReactComponent as EditIcon } from '../svg/edit.svg'
 import axios from 'axios'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faTrash} from '@fortawesome/free-solid-svg-icons'
+import {faBook} from '@fortawesome/free-solid-svg-icons'
+import DeletePopUp from './DeletePopUp'
 
 const NotebookDiv = styled.div`
     display: flex;
@@ -15,20 +17,17 @@ const NotebookDiv = styled.div`
     align-items: center;
     flex-direction: column;
     cursor: pointer;
-    transition: 200ms ease-out;
+    transition: 200ms ease-in-out;
 
     &:hover {
-        transform: scale(1.2);
-        transition: 200ms ease-in;
-        outline: none;
-        border-color: #9ecaed;
-        box-shadow: 0 0 10px #9ecaed;
+        transition: 200ms ease-in-out;
+        transform: translateY(-6px);
     }
 `
 
 const NameField = styled.input`
     margin-top: 10px;
-    font-size: 20px;
+    font-size: 25px;
     width: 110px;
     height: 20px;
     outline: none;
@@ -38,26 +37,21 @@ const NameField = styled.input`
     cursor: ${props => props.editing};
 `
 const SmallText = styled.p`
-    font-size: 10px;
+    font-size: 13px;
+    margin: 0;
 `
 
-const NotebookIcon = styled(Icon)`
-    width: 100px;
-    height: 100px;
-    min-height: 100px;
-    min-width: 100px;
+const InfoButton = styled.div`
+    background-color: 'orange';
 `
 
 const DeleteButton = styled.button`
-    width: 60px;
+    width: 50px;
     height: 30px;
-    border: none;
-    border-radius: 30px;
-    background-color: red;
-    display: ${props => props.show};
     font-size: 10px;
     align-self: flex-start;
     color: white;
+    visibility: ${props => props.show};
 `
 
 const NameContainer = styled.div`
@@ -74,7 +68,7 @@ const EditButton = styled.button`
 
 export default function Notebook({ openNotebook, removeNotebook, notebook, setNotebooks, notebooks }) {
     const [hovered, setHovered] = useState(false)
-    const [showModal, setModalVisibility] = useState(false)
+    const [showDeleteModal, setDeleteModalVisibility] = useState(false)
     const [newNotebookName, setNewNotebookName] = useState(notebook.name)
     const [editing, setEditing] = useState(false)
 
@@ -125,16 +119,18 @@ export default function Notebook({ openNotebook, removeNotebook, notebook, setNo
 
     return (
         <>
-            <NotebookDiv onMouseEnter={mouseEnter} onMouseLeave={mouseLeave} key={notebook.name}>
-                <DeleteButton onClick={() => removeNotebook(notebook)} show={hovered}>Remove</DeleteButton>
-                <NotebookIcon fill={notebook.color} onClick={() => openNotebook(notebook)} />
+            <DeletePopUp deleteNotebook={()=>removeNotebook(notebook)} notebookName={newNotebookName} showState={[showDeleteModal, setDeleteModalVisibility]}></DeletePopUp>
+            <NotebookDiv  className="card m-3" onMouseEnter={mouseEnter} onMouseLeave={mouseLeave} key={notebook.name}>
+                <DeleteButton show={hovered ? 'visible' : 'hidden'} className="d-flex justify-content-center align-items-lg-center btn btn-danger" onClick={() => setDeleteModalVisibility(true)}>
+                    <FontAwesomeIcon  style={{height:'20px'}} icon={faTrash} />
+                </DeleteButton>
+                <FontAwesomeIcon style={{color:notebook.color, height:'70px'}}  icon={faBook} />
 
                 <NameContainer>
                     <NameField editing={editing ? 'text' : 'pointer'} onChange={(e)=> editNameField(e)} value={newNotebookName}></NameField>
-                    <EditButton editing={editing ? 'static' : 'none'} onClick={toggleEditing} show={hovered ? 'inline' : 'none'}>{!editing ? 'rename' : 'save'}</EditButton>
+                    {/*<EditButton editing={editing ? 'static' : 'none'} onClick={toggleEditing} show={hovered ? 'inline' : 'none'}>{!editing ? 'rename' : 'save'}</EditButton>*/}
                 </NameContainer>
-                <SmallText>{hovered ? 'created: ' + notebook.publishDate : ''}</SmallText>
-                <SmallText>{hovered ? 'last edited: ' + notebook.lastEdited : ''}</SmallText>
+                <InfoButton onClick={() => openNotebook(notebook)} className="btn btn-primary m-3">Open</InfoButton>
             </NotebookDiv>
         </>
     )

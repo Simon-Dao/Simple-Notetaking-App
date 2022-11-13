@@ -45,7 +45,7 @@ function PagesComponent({ pagesState, selectPage, selectedPage }) {
   const [pages,setPages] = pagesState
 
   const formatPageName = (name) => {
-    if (name.length > 5)
+    if (name.length > 14)
       return name.substring(0, 5) + '...'
 
     return name
