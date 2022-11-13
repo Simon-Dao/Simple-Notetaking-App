@@ -27,16 +27,14 @@ const Text = styled.textarea`
   border-radius: 20px;
 `
 
-function TextArea({selectedPage, saveContent, pages}) {
+function TextArea({selectedPage, saveContent, pages,contentState}) {
 
-  const content = pages.filter(content => content.name === selectedPage)
-
-  console.log(content)
-
+  const [content, setContent] = contentState
+  
   return (
       <Container>
         <Label>{selectedPage}</Label>
-        <Text value={content ? content[0].content : ''}></Text>
+        <Text onChange={(e)=>setContent(e.target.value)} value={content}></Text>
         <Button onClick={saveContent} style={{height:'50px',width:'200px', margin:"0px 20px 20px 20px", alignSelf:"flex-end"}} >save</Button>
       </Container>
   )
