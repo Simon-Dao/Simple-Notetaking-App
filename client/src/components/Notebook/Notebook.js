@@ -11,7 +11,8 @@ const NotebookDiv = styled.div`
     border-radius: 30px;
     font-size: 20px;
     height: 230px;
-    width: 200px;
+    min-width: 200px;
+    max-width: 400px;
     padding: 20px 20px 0px 20px;
     justify-content: center;
     align-items: center;
@@ -127,8 +128,9 @@ export default function Notebook({ openNotebook, removeNotebook, notebook, setNo
                 <FontAwesomeIcon style={{color:notebook.color, height:'70px'}}  icon={faBook} />
 
                 <NameContainer>
-                    <NameField editing={editing ? 'text' : 'pointer'} onChange={(e)=> editNameField(e)} value={newNotebookName}></NameField>
+                    {/* <NameField editing={editing ? 'text' : 'pointer'} onChange={(e)=> editNameField(e)} value={newNotebookName}></NameField> */}
                     {/*<EditButton editing={editing ? 'static' : 'none'} onClick={toggleEditing} show={hovered ? 'inline' : 'none'}>{!editing ? 'rename' : 'save'}</EditButton>*/}
+                    <div>{newNotebookName}</div>
                 </NameContainer>
                 <InfoButton onClick={() => openNotebook(notebook)} className="btn btn-primary m-3">Open</InfoButton>
             </NotebookDiv>

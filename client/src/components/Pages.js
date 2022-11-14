@@ -51,7 +51,7 @@ export default function Pages() {
   }
 
   const saveContent = () => {
-    console.log('saving content')
+    console.log('saving content '+content)
     axios.post('http://localhost:5000/page/edit-page', {
       notebookName: selectedNotebook,
       pageName: selectedPage,
