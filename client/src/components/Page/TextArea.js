@@ -5,14 +5,20 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
+import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import EditPopUp from './EditPopUp';
+import RemovePopUp from './RemovePopUp';
+import { useRecoilState } from 'recoil';
+import PagesState from '../../state/PagesState';
+import SelectedPageState from '../../state/SelectedPageState';
 
 const Container = styled.div`
-box-sizing: border-box;
+  box-sizing: border-box;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
 `
+
 const TopContainer = styled.div`
   display: flex;
   padding: 20px;
@@ -42,28 +48,34 @@ const SubText = styled.p`
   font-size: 20px;
 `
 
-function TextArea({ selectedPage, saveContent, pages, contentState }) {
+function TextArea({ saveContent, contentState }) {
 
+  const [selectedPage, setSelectedPage] = useRecoilState(SelectedPageState)
+  const [pages, setPages] = useRecoilState(PagesState)
   const [content, setContent] = contentState
   const [saved, setSaved] = useState(false)
-  const [showModal, setModalVisibility] = useState(false)
-
-  function extractContent(s) {
-    var span = document.createElement('span');
-    span.innerHTML = s;
-    return span.textContent || span.innerText;
-  };
+  const [showEditModal, setEditModalVisibility] = useState(false)
+  const [showRemoveModal, setRemoveModalVisibility] = useState(false)
 
   const saveButtonClicked = () => {
     console.log(content)
     saveContent()
   }
 
-  return (
-    <Container>
-      <EditPopUp showState={[showModal, setModalVisibility]}></EditPopUp>
+  const contents = selectedPage === '' ?
+    (
+      <>
+        <h1 className='align-self-center' style={{justifySelf:'center', alignSelf:'center'}}>No pages selected!</h1>
+      </>
+    ) :
+    (<>
+      <EditPopUp showState={[showEditModal, setEditModalVisibility]}></EditPopUp>
+      <RemovePopUp showState={[showRemoveModal, setRemoveModalVisibility]}></RemovePopUp>
       <TopContainer>
-        <Button onClick={() => setModalVisibility(true)} className='btn btn-light' style={{ height: '50px' }}>
+        <Button onClick={() => setRemoveModalVisibility(true)} className='btn btn-light' style={{ height: '50px' }}>
+          <FontAwesomeIcon icon={faTrash} />
+        </Button>
+        <Button onClick={() => setEditModalVisibility(true)} className='btn btn-light' style={{ height: '50px' }}>
           <FontAwesomeIcon icon={faPencil} />
         </Button>
         <Label>{selectedPage} </Label>
@@ -73,6 +85,12 @@ function TextArea({ selectedPage, saveContent, pages, contentState }) {
         </ReactQuill>
       </Text>
       <Button onClick={saveButtonClicked} style={{ flex: 1, height: '50px', width: '200px', margin: "0px 20px 20px 20px", alignSelf: "flex-end" }} >save</Button>
+      </>)
+
+  return (
+
+    <Container>
+      {contents}
     </Container>
   )
 }

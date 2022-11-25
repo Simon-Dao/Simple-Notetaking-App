@@ -1,7 +1,7 @@
 import React from 'react'
 import { useRecoilState } from 'recoil'
 import styled from 'styled-components'
-import titleState from '../state/CurrentTitle' 
+import titleState from '../state/CurrentTitleState' 
 
 const Content = styled.div`
   display: flex;

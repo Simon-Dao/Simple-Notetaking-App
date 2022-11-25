@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Button } from 'react-bootstrap'
 import PopUp from './AddPopUp'
-import axios from 'axios'
-import getDate from '../../utils/Date'
+
 import { useRecoilState } from 'recoil'
-import SelectedNotebook from '../../state/SelectedNotebook'
+import SelectedNotebook from '../../state/SelectedNotebookState'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faFileCirclePlus} from '@fortawesome/free-solid-svg-icons'
+import PagesState from '../../state/PagesState'
 
 const Container = styled.div`
   width: 200px;
@@ -40,9 +40,7 @@ const Page = styled.div`
   transition: color 400ms ease-in-out;
 `
 
-function PagesComponent({ pagesState, selectPage, selectedPage }) {
-
-  const [pages,setPages] = pagesState
+function PagesComponent({selectPage, selectedPage }) {
 
   const formatPageName = (name) => {
     if (name.length > 14)
@@ -51,40 +49,22 @@ function PagesComponent({ pagesState, selectPage, selectedPage }) {
     return name
   }
 
+  const [pages, setPages] = useRecoilState(PagesState)
   const [show, setShow] = useState();
   const [selectedNotebook, setSelectedNotebook] = useRecoilState(SelectedNotebook)
 
-  const addPage = (name) => {
-    if (name.length === 0) {
-      alert('please enter a name for the page')
-      return
-    }
-
-    //add the thing to the database
-    axios.post('http://localhost:5000/page/add-page', {
-      pageName: name,
-      notebookName: selectedNotebook
+  const content = pages.length === 0 ? 'No Pages' :
+    pages.map((item, index) => {
+      return (
+        <Page key={index} className="" selected={selectedPage === item.name} onClick={() => selectPage(item.name)}>{formatPageName(item.name)}</Page>
+      )
     })
 
-    //add it to array of pages
-    pages.push({
-      name: name,
-      publishDate: getDate(),
-      lastEdited: getDate(),
-      content: ''
-    })
-  }
   return (
     <Container>
-      <PopUp addPage={addPage} showState={[show, setShow]}></PopUp>
+      <PopUp showState={[show, setShow]}></PopUp>
       <PagesContainer>
-        {
-          pages.map(item => {
-            return (
-              <Page className="" selected={selectedPage === item.name} onClick={() => selectPage(item.name)}>{formatPageName(item.name)}</Page>
-            )
-          })
-        }
+        {content}
       </PagesContainer>
       <Button style={{width:'100px', alignSelf:'flex-end', margin:'20px'}} onClick={() => setShow(!show)}>
         <FontAwesomeIcon style={{height:'20px',width:'20px'}} icon={faFileCirclePlus} />

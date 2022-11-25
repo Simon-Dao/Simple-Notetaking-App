@@ -4,6 +4,6 @@ import { atom } from "recoil";
 
 export default atom({
 
-    key: 'SelectedPageState',
+    key: 'SelectedNotebookState',
     default: ''
 })

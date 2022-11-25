@@ -103,6 +103,6 @@ POST http://localhost:5000/page/remove-page
 content-type: application/json
 
 {
-    "notebookName": "Jeff",
-    "pageName": "page2"
+    "notebookName": "notebook",
+    "pageName": "test"
 }

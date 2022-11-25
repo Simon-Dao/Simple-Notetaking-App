@@ -3,11 +3,12 @@ import axios from 'axios'
 import styled from 'styled-components'
 import { useRecoilState } from 'recoil'
 import SelectedWindow from '../state/SelectedWindowState'
-import SelectedNotebook from '../state/SelectedNotebook'
+import SelectedNotebook from '../state/SelectedNotebookState'
 import SelectedPage from '../state/SelectedPageState'
 import NavBar from './Page/NavBar'
 import PagesComponent from './Page/PagesComponent'
 import TextArea from './Page/TextArea'
+import PagesState from '../state/PagesState'
 
 const Container = styled.div`
   display: flex;
@@ -18,7 +19,7 @@ const Container = styled.div`
 
 export default function Pages() {
 
-  const [pages, setPages] = useState([])
+  const [pages, setPages] = useRecoilState(PagesState)
   const [emptyMessage, setEmptyMessage] = useState('Add a notebook!')
   const [selectedWindow, setSelectedWindow] = useRecoilState(SelectedWindow)
   const [selectedNotebook, setSelectedNotebook] = useRecoilState(SelectedNotebook)
@@ -32,14 +33,14 @@ export default function Pages() {
         let result = await axios.post('http://localhost:5000/page/get-pages', { notebookName: selectedNotebook })
         setPages(result.data)
 
-        const p = result.data.length > 0 ? result.data[0].name : 'Add a page'
+        const p = result.data.length > 0 ? result.data[0].name : ''
 
         setSelectedPage(p)
         selectPage(p)
       }
       catch (err) {
         console.log(err)
-        setEmptyMessage('Network Error! Could not load notebooks')
+        setEmptyMessage('Network Error! Could not load pages')
       }
     }
     fetchData()
@@ -79,7 +80,7 @@ export default function Pages() {
     <Container>
       <NavBar backToNotebooks={backToNotebooks}>
       </NavBar>
-      <PagesComponent pagesState={[pages, setPages]} selectPage={selectPage} selectedPage={selectedPage} ></PagesComponent>
+      <PagesComponent selectPage={selectPage} selectedPage={selectedPage} ></PagesComponent>
       <TextArea contentState={[content, setContent]} pages={pages} selectedPage={selectedPage} saveContent={saveContent}></TextArea>
     </Container>
   )
