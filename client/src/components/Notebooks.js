@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import styled from 'styled-components'
-import { ReactComponent as Icon } from '../svg/notebook-svg.svg'
 import getDate from '../utils/Date'
 import {useRecoilState} from 'recoil'
 import SelectedWindow from '../state/SelectedWindowState'
-import SelectedNotebook from '../state/SelectedNotebook'
-import NotebookComponent from './Notebook'
+import SelectedNotebook from '../state/SelectedNotebookState'
+import NotebookComponent from './Notebook/Notebook'
+import AddPopUp from './Notebook/AddPopUp'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faFolderPlus} from '@fortawesome/free-solid-svg-icons'
 
 const Container = styled.div`
     display: flex;
@@ -48,66 +50,11 @@ const AddNotebookButton = styled.button`
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 100px;
     right: 200px;
     bottom: 150px;
     width: 100px;
-    height: 100px;
-    background-color: orange;
+    height: 50px;
     border: none;
-    cursor: pointer;
-`
-
-const ModalContainer = styled.div`
-    box-sizing: border-box;
-    position: absolute;
-    right: 250px;
-    bottom: 200px;
-    width: 200px;
-    height: 220px;
-    border-radius: 10px;
-    background-color: orange;
-    display: ${props => props.show ? 'flex' : 'none'};
-    flex-direction: column;
-    align-items: center;
-`
-
-const ModalTextField = styled.input`
-    height: 20px;
-    border-radius: 10px;
-`
-
-const ModalLabel = styled.h1`
-    font-size: 20px;
-    height: 20px;
-`
-
-const ButtonContainer = styled.div`
-    display: flex;
-    justify-content: center;
-`
-
-const ModalButton = styled.button`
-    background-color: green;
-    border-radius: 10px;
-    border: none;
-    width: 80px;
-    height: 30px;
-    margin: 5px;
-    margin-top: 30px;
-    cursor: pointer;
-`
-
-const ColorContainer = styled.div`
-    display: flex;
-`
-
-const ColorOption = styled.div`
-    height: 25px;
-    width: 25px;
-    border: black 3px;
-    margin: 1px;
-    background-color: ${props => props.color};
     cursor: pointer;
 `
 
@@ -121,7 +68,6 @@ export default function Notebooks() {
     const [selectedNotebook, setSelectedNotebook] = useRecoilState(SelectedNotebook)
 
     const [color, setColor] = useState(notebookColors[Math.floor(Math.random() * notebookColors.length)])
-    const [name, setName] = useState('')
 
     useEffect(() => {
 
@@ -156,7 +102,7 @@ export default function Notebooks() {
         setNotebooks(notebooks)
     }
 
-    const addNotebook = () => {
+    const addNotebook = (name) => {
         if (name.length === 0) {
             alert('please enter a name for the notebook')
             return
@@ -229,34 +175,16 @@ export default function Notebooks() {
 
     return (
         <Container>
+            <AddPopUp addNotebook={addNotebook} setColor={setColor} showState={[showModal, setModalVisibility]}></AddPopUp>
             <SearchBar type='text' placeholder='Search'></SearchBar>
             <NotebookContainer>
                 {
                     content
                 }
             </NotebookContainer>
-            <AddNotebookButton onClick={toggleModal}>Add</AddNotebookButton>
-
-            <ModalContainer show={showModal}>
-                <ModalLabel>Notebook Name</ModalLabel>
-                <ModalTextField maxLength={20} value={name} onInput={(e) => { setName(e.target.value) }}></ModalTextField>
-                <ModalLabel>pick a color</ModalLabel>
-                <ColorContainer>
-                    {
-                        notebookColors.map((color) => {
-                            return (
-                                <ColorOption key={color} color={color} onClick={() => setColor(color)}>
-                                </ColorOption>
-                            )
-                        })
-                    }
-                </ColorContainer>
-                <ButtonContainer>
-                    <ModalButton onClick={toggleModal}>cancel</ModalButton>
-                    <ModalButton onClick={addNotebook}>submit</ModalButton>
-                </ButtonContainer>
-            </ModalContainer>
-
+            <AddNotebookButton className="btn btn-primary" onClick={toggleModal}>
+                <FontAwesomeIcon  style={{height:'20px'}} icon={faFolderPlus} />
+            </AddNotebookButton>
         </Container>
     )
 }

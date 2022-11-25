@@ -70,6 +70,8 @@ router.post('/add-page', async (req,res) => {
 
         notebooks[0].pages.push(newPage) 
 
+        console.log('adding page '+newPage.name)
+
         await model.findOneAndUpdate({name:req.body.notebookName}, notebooks[0])
 
     } catch(err) {
@@ -169,6 +171,5 @@ router.post('/remove-page', async (req,res) => {
         res.status(500).json({message: err.message})
     }
 })
-
 
 module.exports = router
