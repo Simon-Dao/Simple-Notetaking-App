@@ -68,3 +68,17 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+### todo!
+
+Edit notebook names
+
+All notebook and page identification should be based off of ids and not names
+
+Add a searchbar for notebooks
+
+Add a searchbar for pages
+
+Add a popup to display notebook information
+
+Add a popup to display page information

@@ -45,8 +45,12 @@ export default function RemovePopUp({ showState }) {
         )
 
         //set selected page
-        if(currentPageIndex !== -1)
-            setSelectedPage(pages[currentPageIndex].name)
+        if(currentPageIndex === 0 && pages.length < 2) {
+            setSelectedPage('')
+        }
+        else if(currentPageIndex !== -1) {
+            setSelectedPage(pages[currentPageIndex-1].name)
+        }
     }
 
     return (
