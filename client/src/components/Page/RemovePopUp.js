@@ -52,10 +52,9 @@ export default function RemovePopUp({ showState }) {
             setSelectedPage(pages[currentPageIndex-1].name)
         }
     }
-
+    
     return (
         <>
-
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>Delete this page?</Modal.Title>
